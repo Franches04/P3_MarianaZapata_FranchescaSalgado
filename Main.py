@@ -36,5 +36,21 @@ def menu():
                     print(f"Ocurrió un error al crear paciente: {e}")
             else:
                 print("La clave no se encontró. Primero se debe cargar el DICOM con la opción 'a' del menú.")
+                
+        elif op == 'c':
+            try:
+                ruta = input("Ruta imagen JPG o PNG: ").strip()
+                clave = input("Clave para guardar imagen: ").strip()
+                img = cv2.imread(ruta)
+                if img is None:
+                    raise ValueError("No fue posible leer la imagen.")
+                archivos_imagenes[clave] = img
+                plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+                plt.title("Imagen cargada")
+                plt.axis('off')
+                plt.show()
+            except Exception as e:
+                print(f"Sucedió un error al cargar la imagen: {e}")
+        
 
         
