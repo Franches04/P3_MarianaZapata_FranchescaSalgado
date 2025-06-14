@@ -96,3 +96,16 @@ class ImagenHandler:
             raise ValueError(f"El tipo de binarización es inválido: {tipo}")
         _, resultado = cv2.threshold(imagen, umbral, 255, tipos[tipo])
         return resultado
+    
+    def morfologia(imagen, operacion='CIERRE', kernel_size=3):
+        ops = {
+            'EROSION': cv2.MORPH_ERODE,
+            'DILATACION': cv2.MORPH_DILATE,
+            'APERTURA': cv2.MORPH_OPEN,
+            'CIERRE': cv2.MORPH_CLOSE
+        }
+        operacion = operacion.strip().upper()
+        if operacion not in ops:
+            raise ValueError(f"La operación morfológica es inválida: {operacion}")
+        kernel = np.ones((kernel_size, kernel_size), np.uint8)
+        return cv2.morphologyEx(imagen, ops[operacion], kernel)
