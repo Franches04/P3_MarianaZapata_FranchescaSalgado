@@ -101,7 +101,59 @@ def menu():
                     print(f"Hubo un error al trasladar la imagen: {e}")
             else:
                 print("La clave no fue encontrada.")
-        
+                
+        elif op == 'e':
+            clave = input("Clave imagen JPG/PNG: ").strip()
+            if clave in archivos_imagenes:
+                img = archivos_imagenes[clave]
+                gris = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+                print("\nMétodos disponibles: BINARIO, BINARIO_INV, TRUNCADO, TOZERO, TOZERO_INV")
+                while True:
+                    metodo = input("Método de binarización: ").strip().upper()
+                    if metodo in ['BINARIO', 'BINARIO_INV', 'TRUNCADO', 'TOZERO', 'TOZERO_INV']:
+                        break
+                    print("El método ingresado es inválido. Intente de nuevo.")
+
+                while True:
+                    try:
+                        umbral = int(input("Umbral (0-255): "))
+                        if 0 <= umbral <= 255:
+                            break
+                        print("El umbral debe estar entre 0 y 255.")
+                    except:
+                        print("Ingresa un número que sea válido.")
+
+                while True:
+                    try:
+                        kernel = int(input("Tamaño del kernel (un número impar mayor o igual que 3 para evitar errores): "))
+                        if kernel >= 3 and kernel % 2 == 1:
+                            break
+                        print("El kernel debe ser un número impar y mayor o igual a 3 como se sugurió.")
+                    except:
+                        print("Por favor ingrese un número válido.")
+
+                while True:
+                    forma = input("Forma (CIRCULO o CUADRADO): ").strip().upper()
+                    if forma in ['CIRCULO', 'CUADRADO']:
+                        break
+                    print("La forma que ingresó es inválida. Intente con CIRCULO o CUADRADO.")
+
+                try:
+                    bin_img = ImagenHandler.binarizar(gris, metodo, umbral)
+                    morf = ImagenHandler.morfologia(bin_img, 'CIERRE', kernel)
+                    final = ImagenHandler.dibujar_forma(morf, forma, 'Imagen binarizada', umbral, kernel)
+                    nombre_archivo = f"procesada_{clave}.png"
+                    cv2.imwrite(nombre_archivo, final)
+                    plt.imshow(cv2.cvtColor(final, cv2.COLOR_BGR2RGB))
+                    plt.title("Resultado Final")
+                    plt.axis('off')
+                    plt.show()
+                    print(f"La imagen procesada fue guardada como {nombre_archivo}")
+                except Exception as e:
+                    print(f"Ocurrió un error durante el procesamiento: {e}")
+            else:
+                print("La clave no fue encontrada. Primero cargue la imagen con la opción 'c'.")
         
 
         
