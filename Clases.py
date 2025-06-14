@@ -109,3 +109,38 @@ class ImagenHandler:
             raise ValueError(f"La operación morfológica es inválida: {operacion}")
         kernel = np.ones((kernel_size, kernel_size), np.uint8)
         return cv2.morphologyEx(imagen, ops[operacion], kernel)
+    
+    def dibujar_forma(imagen, forma='CIRCULO', texto='Imagen binarizada', umbral=127, kernel=3):
+        forma = forma.strip().upper()
+        copia = cv2.cvtColor(imagen, cv2.COLOR_GRAY2BGR) if len(imagen.shape) == 2 else imagen.copy()
+        alto, ancho = copia.shape[:2]
+        centro = (ancho // 2, alto // 2)
+
+        texto_final = f"{texto} | U:{umbral} | K:{kernel}"
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        font_scale = 0.5
+        thickness = 1
+
+        # Calcular tamaño del texto
+        (w_texto, h_texto), baseline = cv2.getTextSize(texto_final, font, font_scale, thickness)
+        x_texto = centro[0] - w_texto // 2
+        y_texto = centro[1] + h_texto // 2 - baseline // 2
+
+        # Asignar color según la forma
+        if forma == 'CIRCULO':
+            color = (0, 255, 0)  # Verde
+            radio = max(w_texto, h_texto) // 2 + 20
+            cv2.circle(copia, centro, radio, color, 2)
+        elif forma == 'CUADRADO':
+            color = (255, 0, 0)  # Azul
+            lado = max(w_texto, h_texto) + 40
+            cv2.rectangle(copia,
+                        (centro[0] - lado // 2, centro[1] - lado // 2),
+                        (centro[0] + lado // 2, centro[1] + lado // 2),
+                        color, 2)
+        else:
+            raise ValueError(f"Forma no reconocida: {forma}")
+
+        cv2.putText(copia, texto_final, (x_texto, y_texto), font, font_scale, color, thickness, cv2.LINE_AA)
+
+        return copia
