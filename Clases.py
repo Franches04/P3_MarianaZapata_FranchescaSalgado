@@ -13,3 +13,8 @@ class Paciente:
         self.edad = edad
         self.ID = ID
         self.imagen_3D = imagen_3D
+class DicomHandler:
+    def __init__(self, folder_path):
+        self.folder_path = folder_path
+        self.slices = self.cargar_dicom()
+        self.image_3d = self.reconstruir_3D()
