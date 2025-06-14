@@ -18,7 +18,7 @@ class DicomHandler:
         self.folder_path = folder_path
         self.slices = self.cargar_dicom()
         self.image_3d = self.reconstruir_3D()
-        
+
     def cargar_dicom(self):
         dicoms = []
         for archivo in os.listdir(self.folder_path):
@@ -66,3 +66,18 @@ class DicomHandler:
 
         plt.tight_layout()
         plt.show()
+        
+    def trasladar_imagen(self, index=0, dx=10, dy=10):
+        if index < 0 or index >= len(self.slices):
+            raise IndexError("El indice está fuera de rango de cortes DICOM.")
+
+        img = self.slices[index].pixel_array
+
+        if img.dtype != np.uint8:
+            img = cv2.convertScaleAbs(img, alpha=(255.0 / np.max(img)))
+
+        row, col = img.shape[:2]
+        MT = np.float32([[1, 0, dx], [0, 1, dy]])
+        trasladada = cv2.warpAffine(img, MT, (col, row))
+
+        return img, trasladada
