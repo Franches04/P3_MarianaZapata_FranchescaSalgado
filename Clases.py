@@ -66,7 +66,7 @@ class DicomHandler:
 
         plt.tight_layout()
         plt.show()
-        
+
     def trasladar_imagen(self, index=0, dx=10, dy=10):
         if index < 0 or index >= len(self.slices):
             raise IndexError("El indice está fuera de rango de cortes DICOM.")
@@ -81,3 +81,18 @@ class DicomHandler:
         trasladada = cv2.warpAffine(img, MT, (col, row))
 
         return img, trasladada
+
+class ImagenHandler:
+    def binarizar(imagen, tipo='BINARIO', umbral=127):
+        tipos = {
+            'BINARIO': cv2.THRESH_BINARY,
+            'BINARIO_INV': cv2.THRESH_BINARY_INV,
+            'TRUNCADO': cv2.THRESH_TRUNC,
+            'TOZERO': cv2.THRESH_TOZERO,
+            'TOZERO_INV': cv2.THRESH_TOZERO_INV
+        }
+        tipo = tipo.strip().upper()
+        if tipo not in tipos:
+            raise ValueError(f"El tipo de binarización es inválido: {tipo}")
+        _, resultado = cv2.threshold(imagen, umbral, 255, tipos[tipo])
+        return resultado
