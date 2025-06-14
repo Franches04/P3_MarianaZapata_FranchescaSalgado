@@ -7,3 +7,9 @@ import matplotlib.pyplot as plt
 pacientes = {}
 archivos_dicom = {}
 archivos_imagenes = {}
+class Paciente:
+    def __init__(self, nombre, edad, ID, imagen_3D):
+        self.nombre = nombre
+        self.edad = edad
+        self.ID = ID
+        self.imagen_3D = imagen_3D
