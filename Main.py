@@ -153,7 +153,14 @@ def menu():
                 except Exception as e:
                     print(f"Ocurrió un error durante el procesamiento: {e}")
             else:
-                print("La clave no fue encontrada. Primero cargue la imagen con la opción 'c'.")
+                print("La clave no fue encontrada. Primero cargue la imagen con la opción 'c' del menú.")
+                
+        elif op == 'f':
+            print("Saliendo del sistema...")
+            break
+
+if __name__ == "__main__":
+    menu()
         
 
         
