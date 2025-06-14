@@ -29,3 +29,12 @@ class DicomHandler:
                     pass
         dicoms.sort(key=lambda x: int(getattr(x, 'InstanceNumber', 0)))
         return dicoms
+    def reconstruir_3D(self):
+        return np.stack([s.pixel_array for s in self.slices])
+
+    def obtener_info_paciente(self):
+        ds = self.slices[0]
+        nombre = str(getattr(ds, 'PatientName', 'Anonimo'))
+        edad = str(getattr(ds, 'PatientAge', '000'))
+        ID = str(getattr(ds, 'PatientID', '0000'))
+        return nombre, edad, ID
